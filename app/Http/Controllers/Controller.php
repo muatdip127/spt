@@ -22,13 +22,51 @@ use App\art;
 use DB;
 use Illuminate\Http\Request;
 use Artisan;
+use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     public $prop = array('spec','thin','width','length','height','serface','stairs','insection','num_ins','outgo','gilz');
     
+    public function creatertikul(Request $request)
+    /**
+     *Создание артикула
+     **/
+    {
+        $d = $request->input('pr');
+        $art = new art();
+        $art->spec_id = $d['spec'];
+        $art->name_id = $d['name'];
+        $art->thin_id = $d['thin'];
+        $art->width_id = $d['width'];
+        $art->length_id = $d['vlength'];
+        $art->height_id = $d['height'];
+        $art->serface_id = $d['serface'];
+        $art->stairs_id = $d['stairs'];
+        $art->insection_id = $d['insection'];
+        $art->num_ins_id = $d['num_ins'];
+        $art->outgo_id = $d['outgo'];
+        $art->gilz_id = $d['gilz'];
+        $art->save();
+        return $this->get_art();
+    }
+    
+    public function get_auth()
+    /**
+     *Проверяем авторизацию
+     */
+        {
+            if (Auth::check()) {
+    // The user is logged in...
+                return Auth::user();
+            }
+            else return 0;
+        }
     public function get_art()
+    /**
+     *Получаем Список всех артикулов
+     */
     {
         return art::select(DB::raw("concat(name.num,spec.num,thin.num,length.num,width.num,height.num,serface.num,stairs.num,insection.num,num_ins.num,outgo.num,gilz.num) as art"),
                            'art.id as id','name_id','spec_id','thin_id','width_id','length_id','height_id','serface_id','stairs_id','insection_id','num_ins_id','outgo_id','gilz_id',
@@ -64,6 +102,9 @@ class Controller extends BaseController
         Artisan::call('migrate', array('--path' => 'app/migrations', '--force' => true));
     }
     public function get_arts(Request $request)
+    /**
+     *Получаем артикул по параметрам
+     */
     {
         $d = $request->input('pr');
         return art::select(DB::raw("concat(name.num,spec.num,thin.num,length.num,width.num,height.num,serface.num,stairs.num,insection.num,num_ins.num,outgo.num,gilz.num) as art"),

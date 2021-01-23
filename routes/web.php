@@ -21,3 +21,8 @@ Route::get('/get_art','Controller@get_art');
 Route::post('/get_arts','Controller@get_arts');
 Route::get('/ get_prop','Controller@get_prop');
 Route::get('/migrate','Controller@migrate');
+Route::get('/get_auth','Controller@get_auth');
+Route::post('/creatertikul','Controller@creatertikul');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
